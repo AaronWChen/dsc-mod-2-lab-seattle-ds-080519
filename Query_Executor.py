@@ -2,6 +2,8 @@ import pandas as pd
 import sqlite3
 import numpy as np
 from WeatherGetter import WeatherGetter as wg
+import matplotlib.pyplot as plt
+#%matplotlib inline
 
 conn = sqlite3.connect('database.sqlite')
 c = conn.cursor()
@@ -124,8 +126,31 @@ class QueryExecutor():
         df['rain_win_percent'] = (df['rain_wins'] / df['rain_games']) * 100
         df['rain_win_percent'] = df['rain_win_percent'].round(decimals=2)
         df['matches_played'] = df['wins'] + df['draws'] + df['losses']
-        return df
+        df.to_csv('2011_summary.csv', index=False)
+        #return df
+        # f, ax = plt.subplots(1, figsize=(10,5))
+        # bar_width = 1
+        # bar_l = [i for i in range(len(df['Club']))]
+        # tick_pos = [i + (bar_width/2) for i in bar_l]
 
+        # ax.bar(bar_l, df['wins'], label='Wins', alpha=0.9, color='#019600',
+        #         width=bar_width, edgecolor='white')
+
+        # ax.bar(bar_l, df['draws'], bottom=df['wins'], label='Draws',
+        #         alpha=0.9, color='#3C5F5A',width=bar_width,edgecolor='white')
+
+        # ax.bar(bar_l,df['losses'],bottom=df['wins'] + df['draws'], label='Losses',
+        #         alpha=0.9, color='#219AD8', width=bar_width, edgecolor='white')
+
+        # plt.xticks(tick_pos, df['Club'])
+        # ax.set_ylabel("Match Results")
+        # ax.sex_xlabel("Clubs")
+
+        # plt.xlim([min(tick_pos)-bar_width, max(tick_pos)+bar_width])
+        # plt.ylim(-10,50)
+
+        # plt.setp(plt.gca().get_xticklabels(),rotation=45,horizontalalignment='right')
+        # plt.show()
     
     @classmethod
     def team_names(self):
@@ -139,5 +164,5 @@ class QueryExecutor():
         return df
 
 test = QueryExecutor(team_name='test')
-test.find_rain_dates()
-print(test.season_summary())
+#test.find_rain_dates()
+test.season_summary()
