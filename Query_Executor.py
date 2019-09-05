@@ -39,10 +39,10 @@ class QueryExecutor():
 
         df.to_csv('matches_adding_rain_info.csv', index=False)
 
-        new_table_q = """ CREATE TABLE with_rain ()
+        df.to_sql('with_rain', conn, if_exists='append', index=False)
 
-                        """
-
+        #new_table_q = """ CREATE TABLE with_rain (Match_ID, Date, HomeTeam, AwayTeam, FTHG, FTAG, FTR, rain_game);"""
+        #with open('matches_adding_rain_info.csv')
     """def create_rain_pd(self):
        '''This was the original method used to call the Dark Sky API to return the rain
         status of a game day. However, this resulted in too many API calls and was modified
@@ -69,7 +69,9 @@ class QueryExecutor():
 
         q = """ SELECT HomeTeam as Club,
             (h_goals_for + a_goals_for) AS total_goals,
-            (h_win + a_win) AS wins
+            (h_win + a_win) AS wins,
+            (h_rain_win + h_rain_draw + h_rain_loss + a_rain_win + a_rain_draw + a_rain_loss) AS rain_games,
+            (h_rain_win + a_rain_win) AS rain_wins
             
             FROM 
             
@@ -78,12 +80,15 @@ class QueryExecutor():
                 SUM(CASE WHEN FTHG = FTAG THEN 1 ELSE 0 END) AS h_draw,
                 SUM(CASE WHEN FTHG < FTAG THEN 1 ELSE 0 END) AS h_loss,
                 SUM(FTHG) AS h_goals_for,
-                SUM(FTAG) AS h_goals_agst
-            
-            FROM Matches
-            WHERE Season = 2011
-            GROUP BY HomeTeam
-            ORDER BY HomeTeam)
+                SUM(FTAG) AS h_goals_agst,
+                SUM(CASE WHEN FTHG > FTAG AND rain_game = 1 THEN 1 ELSE 0 END) AS h_rain_win,
+                SUM(CASE WHEN FTHG = FTAG AND rain_game = 1 THEN 1 ELSE 0 END) AS h_rain_draw,
+                SUM(CASE WHEN FTHG < FTAG AND rain_game = 1 THEN 1 ELSE 0 END) AS h_rain_loss
+                
+                FROM with_rain
+                
+                GROUP BY HomeTeam
+                ORDER BY HomeTeam)
 
             JOIN
 
@@ -92,20 +97,25 @@ class QueryExecutor():
                 SUM(CASE WHEN FTAG = FTHG THEN 1 ELSE 0 END) AS a_draw,
                 SUM(CASE WHEN FTAG < FTHG THEN 1 ELSE 0 END) AS a_loss,
                 SUM(FTAG) AS a_goals_for,
-                SUM(FTHG) AS a_goals_agst
+                SUM(FTHG) AS a_goals_agst,
+                SUM(CASE WHEN FTAG > FTHG AND rain_game = 1 THEN 1 ELSE 0 END) AS a_rain_win,
+                SUM(CASE WHEN FTAG = FTHG AND rain_game = 1 THEN 1 ELSE 0 END) AS a_rain_draw,
+                SUM(CASE WHEN FTAG < FTHG AND rain_game = 1 THEN 1 ELSE 0 END) AS a_rain_loss            
             
-            FROM Matches
-            WHERE Season = 2011
-            GROUP BY AwayTeam
-            ORDER BY AwayTeam)
+                FROM with_rain
+                
+                GROUP BY AwayTeam
+                ORDER BY AwayTeam)
             
             ON (HomeTeam == AwayTeam)
             
-            ORDER BY total_goals DESC, wins DESC;
+            ORDER BY total_goals DESC, wins DESC, rain_games DESC, rain_wins DESC;
             """
         c.execute(q)
         df = pd.DataFrame(c.fetchall())
         df.columns = [x[0] for x in c.description]
+        df['rain_win_percent'] = (df['rain_wins'] / df['rain_games']) * 100
+        df['rain_win_percent'] = df['rain_win_percent'].round(decimals=2)
         return df
 
         '''q = f"""SELECT HomeTeam as Club,
@@ -165,4 +175,5 @@ class QueryExecutor():
 test = QueryExecutor(team_name='test')
 #test.create_rain_pd.head
 #print(test.create_rain_pd())
-print(test.team_names())
+#print(test.team_names())
+print(test.season_summary())
