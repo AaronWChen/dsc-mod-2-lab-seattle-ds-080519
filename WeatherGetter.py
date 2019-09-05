@@ -18,7 +18,6 @@ class WeatherGetter():
 
     def __init__(self):
         pass
-        #self.date = date
 
     @classmethod
     def get_weather(self, date):
@@ -32,7 +31,7 @@ class WeatherGetter():
         during a certain period of time.
         """
         self.date = date
-        key = 'efebc41f73e708d2d257aa679722cc55'  #'3536e1f7acd6eda20f19741fa5928db7'#'60e44c5191a3e42cd7d6316c5ca466b8'
+        key = open('secret/key_info.txt', 'r').read()
         lat = '52.52'
         lon = '13.405'
         time = '18:00:00'
