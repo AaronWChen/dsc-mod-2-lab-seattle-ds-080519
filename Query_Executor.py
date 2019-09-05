@@ -35,8 +35,13 @@ class QueryExecutor():
 
         rain_dates = unique_dates[unique_dates['rain_game'] == True]
         df['rain_game'] = df['Date'].isin(rain_dates['Date'])
+        df['rain_game'] = df['rain_game'].astype(int)
 
-        df.to_csv('matches_adding_rain_info.csv')
+        df.to_csv('matches_adding_rain_info.csv', index=False)
+
+        new_table_q = """ CREATE TABLE with_rain ()
+
+                        """
 
     """def create_rain_pd(self):
        '''This was the original method used to call the Dark Sky API to return the rain
@@ -56,53 +61,108 @@ class QueryExecutor():
         print(df.head())
         print(wg.get_weather('2011-11-01'))
         return df[:30]
-        pass"""
-
-
-        
+        pass""" 
     
-    # def get_each_team(self):
-    #     team_name = self.team_name
+    def season_summary(self):
+        """ This method generates a dataframe of the season summary for each team
+        """
 
-    #     q = f"""SELECT HomeTeam as Club,
-    #         (h_win + a_win + h_draw + a_draw + h_loss + a_loss) AS matches_played,
-    #         (h_win + a_win) AS wins,
-    #         (h_draw + a_draw) AS draws,
-    #         (h_loss + a_loss) AS losses,
-    #         (h_goals_for + a_goals_for) AS GF,
-    #         (h_goals_agst + a_goals_agst) AS GA,
-
-    #         FROM 
+        q = """ SELECT HomeTeam as Club,
+            (h_goals_for + a_goals_for) AS total_goals,
+            (h_win + a_win) AS wins
             
-    #         (SELECT HomeTeam,
-    #             SUM(CASE WHEN FTHG > FTAG THEN 1 ELSE 0 END) AS h_win,
-    #             SUM(CASE WHEN FTHG = FTAG THEN 1 ELSE 0 END) AS h_draw,
-    #             SUM(CASE WHEN FTHG < FTAG THEN 1 ELSE 0 END) AS h_loss,
-    #             SUM(FTHG) AS h_goals_for,
-    #             SUM(FTAG) AS g_goals_agst
+            FROM 
             
-    #         FROM Matches
-    #         WHERE Season = 2011
-    #         GROUP BY HomeTeam
-    #         ORDER BY HomeTeam)
-
-    #         JOIN
-
-    #         (SELECT AwayTeam,
-    #             SUM(CASE WHEN FTAG > FTHG THEN 1 ELSE 0 END) AS h_win,
-    #             SUM(CASE WHEN FTAG = FTHG THEN 1 ELSE 0 END) AS h_draw,
-    #             SUM(FTHG) AS h_goals_for,
-    #             SUM(FTAG) AS g_goals_agst
+            (SELECT HomeTeam,
+                SUM(CASE WHEN FTHG > FTAG THEN 1 ELSE 0 END) AS h_win,
+                SUM(CASE WHEN FTHG = FTAG THEN 1 ELSE 0 END) AS h_draw,
+                SUM(CASE WHEN FTHG < FTAG THEN 1 ELSE 0 END) AS h_loss,
+                SUM(FTHG) AS h_goals_for,
+                SUM(FTAG) AS h_goals_agst
             
-    #         FROM Matches
-    #         WHERE Season = 2011
-    #         GROUP BY HomeTeam
-    #         ORDER BY HomeTeam)
-    #         Matches
-    #         WHERE (Season = 2011 AND (HomeTeam))
+            FROM Matches
+            WHERE Season = 2011
+            GROUP BY HomeTeam
+            ORDER BY HomeTeam)
 
-    #         """
+            JOIN
+
+            (SELECT AwayTeam,
+                SUM(CASE WHEN FTAG > FTHG THEN 1 ELSE 0 END) AS a_win,
+                SUM(CASE WHEN FTAG = FTHG THEN 1 ELSE 0 END) AS a_draw,
+                SUM(CASE WHEN FTAG < FTHG THEN 1 ELSE 0 END) AS a_loss,
+                SUM(FTAG) AS a_goals_for,
+                SUM(FTHG) AS a_goals_agst
+            
+            FROM Matches
+            WHERE Season = 2011
+            GROUP BY AwayTeam
+            ORDER BY AwayTeam)
+            
+            ON (HomeTeam == AwayTeam)
+            
+            ORDER BY total_goals DESC, wins DESC;
+            """
+        c.execute(q)
+        df = pd.DataFrame(c.fetchall())
+        df.columns = [x[0] for x in c.description]
+        return df
+
+        '''q = f"""SELECT HomeTeam as Club,
+            (h_win + a_win + h_draw + a_draw + h_loss + a_loss) AS matches_played,
+            (h_win + a_win) AS wins,
+            (h_draw + a_draw) AS draws,
+            (h_loss + a_loss) AS losses,
+            (h_goals_for + a_goals_for) AS GF,
+            (h_goals_agst + a_goals_agst) AS GA,
+            (h_goals_for + a_goals_for - h_goals_agst - a_goals_agst) AS GD,
+            ((h_win + a_win) * 3 + (h_draw + a_draw)) AS Pts
+
+            FROM 
+            
+            (SELECT HomeTeam,
+                SUM(CASE WHEN FTHG > FTAG THEN 1 ELSE 0 END) AS h_win,
+                SUM(CASE WHEN FTHG = FTAG THEN 1 ELSE 0 END) AS h_draw,
+                SUM(CASE WHEN FTHG < FTAG THEN 1 ELSE 0 END) AS h_loss,
+                SUM(FTHG) AS h_goals_for,
+                SUM(FTAG) AS h_goals_agst
+            
+            FROM Matches
+            WHERE Season = 2011
+            GROUP BY HomeTeam
+            ORDER BY HomeTeam)
+
+            JOIN
+
+            (SELECT AwayTeam,
+                SUM(CASE WHEN FTAG > FTHG THEN 1 ELSE 0 END) AS a_win,
+                SUM(CASE WHEN FTAG = FTHG THEN 1 ELSE 0 END) AS a_draw,
+                SUM(CASE WHEN FTAG < FTHG THEN 1 ELSE 0 END) AS a_loss,
+                SUM(FTAG) AS a_goals_for,
+                SUM(FTHG) AS a_goals_agst
+            
+            FROM Matches
+            WHERE Season = 2011
+            GROUP BY AwayTeam
+            ORDER BY AwayTeam)
+            
+            ON (HomeTeam == AwayTeam)
+            
+            ORDER BY total_goals DESC, wins DESC;
+            """'''
     
+    @classmethod
+    def team_names(self):
+        """ This method generates a dataframe of all the team names"""
+        q = """SELECT TeamName
+            FROM Teams;
+            """
+        c.execute(q)
+        df = pd.DataFrame(c.fetchall())
+        df.columns = [x[0] for x in c.description]
+        return df
+
 test = QueryExecutor(team_name='test')
 #test.create_rain_pd.head
-print(test.create_rain_pd())
+#print(test.create_rain_pd())
+print(test.team_names())

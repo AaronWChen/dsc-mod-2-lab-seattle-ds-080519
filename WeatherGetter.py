@@ -43,9 +43,9 @@ class WeatherGetter():
         if resp.status_code == 200:
             response_dict = resp.json()
             if response_dict['currently']['icon'] == 'rain':
-                result = True
+                result = 1
             else:
-                result = False
+                result = 0
 
         else:
             print("Error, unable to retrieve. Server response code is: ", resp.status_code)
