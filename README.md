@@ -31,12 +31,12 @@ The original sqlite file has a lot of information that can be used! It is possib
 The current implementation of weather only checks for a simple boolean of whether or not it rained on that game day in Berlin. However, not all of the games were played in Berlin and were played at different times. Future improvements can factor in the proper geography and meterology.
 
 
-### Running the Code
+## Running the Code
 If you are looking to run and/or work on this project yourself, you will need to 
 1. Create an account with DarkSky to obtain an API key with them
 2. Create a folder inside the repo root called secrets, and store the DarkSky API key in a dictionary inside a json file named "dark_sky_api.json". The key should be "key" and the value should be the API code.
 3. Install Python 3 (I prefer and recommend Anaconda)
-4. Clone this repo
+4. Clone [this repo](https://github.com/AaronWChen/Kickin-in-the-Rain)
 5. Install the packages in the requirements.txt file via pip (pip install -r requirements.txt from command line)
 
 If you want to see the high level execution and results of the code, you can navigate to the python/ directory of this repo, open a Jupyter server there, and explore the notebooks (particularly plotter.ipynb).
