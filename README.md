@@ -1,84 +1,44 @@
 
 # Kickin in the Rain: The Impact of Rain Upon Soccer Wins
+### Author: Aaron Washington Chen
+### GitHub Profile [Here](https://github.com/AaronWChen)
 
 ## Executive Summary
 
-For today's section, we're going to work on a single big lab to apply everything we've learned in Module 2!
+This repo uses a given sqlite database and an API to hybridize data to visualize how much of an effect rain has on a soccer league's win/tie/loss percentages.
 
-## About This Lab
+In short, the impact is inconlusive; while the top 2 most successful teams in this league in this season did win more rain games than they lost, there are teams in the upper middle and even one team in the lower rankings which have 100% rain win rates but these wins did not propel them to the upper tier.
 
-A quick note before getting started--this lab isn't like other labs you seen so far. This lab is meant to take ~8 hours to complete, so it's much longer and more challenging that the average labs you've seen so far. If you feel like this lab is challenging or that you might be struggling a bit, don't fret--that's by design! With everything we've learned about Web Scraping, APIs, and Databases, the best way to test our knowledge of it is to build something substantial! 
+This is likely due to a small sample size: Few games were played in the rain, so the overall effect of winning a small amount of rain games would wash out over the 32 game season.
 
-## The Project
+The emphasis for teams should not be to prepare to dominate games in poor weather conditions and they should focus on improving overall play instead.
 
-In this lab, we're going to make use of everything we've learned about APIs, databases, and Object-Oriented Programming to **_Extract, Transform, and Load_** (or **_ETL_**, for short) some data from a SQL database into a MongoDB Database. 
+![Overall Season Results for Each Team in the 2011 Season](https://github.com/AaronWChen/Kickin-in-the-Rain/blob/master/plots/2011_season_wins_draws_losses_summary.png)
 
-You'll find a database containing information about soccer teams and the matches they've played in the file `database.sqlite`. For this project, our goal is to get the data we think is important from this SQL database, do some calculations and data transformation, and then store everything in a MongoDB database. 
-
-Let's get into the specifics of this project.
-
-### The Goal
-
-Start by examining the data dictionary for the SQL database we'll be working with, which comes from this [kaggle page](https://www.kaggle.com/laudanum/footballdelphi).  Familiarize yourself with the tables it contains, and what each column means. We'll be using this database to get data on each soccer team, calculate some summary statistics, and then store each in a MongoDB database. 
-
-Upon completion of this lab, each unique team in this dataset should have a record in the MongoDB instance containing the following information:
-
-* The name of the team
-* The total number of goals scored by the team during the 2011 season
-* The total number of wins the team earned during the 2011 season
-* A histogram visualization of the team's wins and losses for the 2011 season (store the visualization directly by assigning it to a variable)
-* The team's win percentage on days where it was raining during games in the 2011 season. 
-
-#### Getting the Weather Data
-
-Note that for this last calculation, you'll need to figure out if it was raining or not during the game. The database itself does not contain this information, but it does contain the date on which the game was played. For this, you'll need to use the [DarkSky API](https://darksky.net/dev) to get the historical weather data for that day. Note that each game is played in a different location, and this information is not contained in our SQL database. However, the teams in this database are largely german, so go ahead and just use the weather in Berlin, Germany as a proxy for this information. If it was raining in Berlin on the day the game was played, count that as rain game--**_you do not need to try and figure out the actual weather at each game's location, because we don't have that information!_**
-
-#### NOTE: The DarkSky API is limited to 1000 free API calls a day, so be sure to test your model on very small samples. Otherwise, you'll hit the rate limit!
-
-## Project Architecture
-
-Unlike previous labs, this lab is more open-ended, and will require you to make design decisions and plan out your strategy for building a system with this many working parts. However, **_using Object-Oriented Programming is a requirement for this project--you must create at least 2 separate, well structured classes in your solution!_** Although it may seem easier to "just start coding", this is a classic beginner's mistake. Instead, think about separating out the different functionalities you'll need to reach your goal, and then build classes to handle each. For instance, at minimum, you'll need to:
-
-* Query the SQL database
-* Calculate summary statistics
-* Get the weather data from the DarkSky API
-* Load the data into MongoDB
-
-We **_strongly recommend_** you consider creating separate classes for handling at least some of these of these tasks.  Be sure to plan the inputs, outputs, and methods for each class before you begin coding! 
-
-**_NOTE:_** We have provided some empty classes below. You are welcome to delete them and use a different architecture for this project if you so choose.  You do not have to use each of them, they are just there to give you an idea of what you could sorts of classes you may want to consider using.
-
-### Rapid Prototyping and Refactoring
-
-It's totally okay to try to get a task working without using OOP. For instance, when experimenting with the DarkSky API for getting historical weather data, it makes sense to just write the code in the cells and rapidly iterate until you get it all working. However, once you get it working, you're not done--you should then **_Refactor_** your code into functions or classes to make your code more modular, reusable, understandable, and maintainable! 
-
-In short--do what you need to do to get each separate piece of functionality working, and then refactor it into a class after you've figured it out!
-
-### Some Final Advice
-
-You haven't built anything this big or complex thus far, so you may not yet fully realize how much trial and error goes into it. If your code keeps breaking, resist the urge to get frustrated, and just keep working. Software development is an iterative process!  No one writes perfect code that works the first time for something this involved. You're going to run into _a lot_ of small errors in this project, right up until the point where it just works, and then you're done! However, you can reduce these errors by planning out your code, and thinking about how all of the pieces fit together before you begin coding. Once you have some basic understanding of how it all will work, then you'll know what you need to build, and then all that is left is to build it!
-
-In short:
-
-* Plan ahead--you'll thank yourself later!
-* Errors and broken code aren't bad, they're normal. 
-* Keep working, and stay confident--you can do this!
-
-Good luck--we look forward to seeing your completed project!
+![Rain Win Percentage for Each Team in the 2011 Season](https://github.com/AaronWChen/Kickin-in-the-Rain/blob/master/plots/2011_season_rain_win_percentage_summary.png)
 
 
-```python
-# You don't have to use these classes, but we recommend them as a good place to start!
-class WeatherGetter():
-    pass
-```
+## Project Information
+
+This project uses 2011 soccer season data from this [kaggle page](https://www.kaggle.com/laudanum/footballdelphi). The goal was to extract, transform, and load (ETL) the given SQL database and combine the information with weather data from the [DarkSky API](https://darksky.net/dev) with API calls. 
+
+The goal was to display the number of wins, ties, and losses for each team and compare that information to each team's corresponding win percentage in the rain to see how much of an effect rain wins contributed to the overall season results.
 
 
-```python
-class MongoHandler():
-    pass
-```
+## Improvements and Next Steps
+The original sqlite file has a lot of information that can be used! It is possible to play with the information more; perhaps showing goals and goal differentials for each team over the course of the season. In addition, this relatively simple and well structured information can be converted over to a NoSQL type of database like MongoDB for experimentation.
 
-# Summary
+The current implementation of weather only checks for a simple boolean of whether or not it rained on that game day in Berlin. However, not all of the games were played in Berlin and were played at different times. Future improvements can factor in the proper geography and meterology.
 
-In this lab, we dug deep and used everything we've learned so far about python programming, databases, HTTP requests and API calls to ETL data from a SQL database into a MongoDB instance!
+
+### Running the Code
+If you are looking to run and/or work on this project yourself, you will need to 
+1. Create an account with DarkSky to obtain an API key with them
+2. Create a folder inside the repo root called secrets, and store the DarkSky API key in a dictionary inside a json file named "dark_sky_api.json". The key should be "key" and the value should be the API code.
+3. Install Python 3 (I prefer and recommend Anaconda)
+4. Clone this repo
+5. Install the packages in the requirements.txt file via pip (pip install -r requirements.txt from command line)
+
+If you want to see the high level execution and results of the code, you can navigate to the python/ directory of this repo, open a Jupyter server there, and explore the notebooks (particularly plotter.ipynb).
+
+If you are looking to make changes to the code, I recommend using Visual Studio Code to open the files and edit.
