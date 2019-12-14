@@ -2,6 +2,7 @@ import requests
 from datetime import datetime
 import pytz
 from pytz import timezone
+import json
 
 class WeatherGetter():
     """This class contains methods needed to return the weather at Berlin by 
@@ -10,7 +11,6 @@ class WeatherGetter():
     The API calls for latitude, longitude, and time. Berlin's latitude and longitude
     are 52.52 and 13.405
 
-    Dark Sky API key: 60e44c5191a3e42cd7d6316c5ca466b8
     Berlin timezone = UTC + 2, Europe/Berlin
     """
 
@@ -32,7 +32,11 @@ class WeatherGetter():
         during a certain period of time.
         """
         self.date = date
-        key = 'efebc41f73e708d2d257aa679722cc55'  #'3536e1f7acd6eda20f19741fa5928db7'#'60e44c5191a3e42cd7d6316c5ca466b8'
+
+        api_key_path = '../secrets/dark_sky_api.json'
+        with open(api_key_path, 'r') as fo:
+            api_key =  json.load(api_key_path)
+        key = api_key['key']
         lat = '52.52'
         lon = '13.405'
         time = '18:00:00'

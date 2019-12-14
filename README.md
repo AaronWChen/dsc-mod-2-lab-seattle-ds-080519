@@ -1,7 +1,7 @@
 
-# Module 2 Summative Lab
+# Kickin in the Rain: The Impact of Rain Upon Soccer Wins
 
-## Introduction
+## Executive Summary
 
 For today's section, we're going to work on a single big lab to apply everything we've learned in Module 2!
 
