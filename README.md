@@ -7,7 +7,7 @@
 
 This repo uses a given sqlite database and an API to hybridize data to visualize how much of an effect rain has on a soccer league's win/tie/loss percentages.
 
-In short, the impact is inconlusive; while the top 2 most successful teams in this league in this season did win more rain games than they lost, there are teams in the upper middle and even one team in the lower rankings which have 100% rain win rates but these wins did not propel them to the upper tier.
+In short, the impact is inconclusive; while the top 2 most successful teams in this league in this season did win more rain games than they lost, there are teams in the upper middle and even one team in the lower rankings which have 100% rain win rates but these wins did not propel them to the upper tier.
 
 This is likely due to a small sample size: Few games were played in the rain, so the overall effect of winning a small amount of rain games would wash out over the 32 game season.
 
@@ -20,7 +20,7 @@ The emphasis for teams should not be to prepare to dominate games in poor weathe
 
 ## Project Information
 
-This project uses 2011 soccer season data from this [kaggle page](https://www.kaggle.com/laudanum/footballdelphi). The goal was to extract, transform, and load (ETL) the given SQL database and combine the information with weather data from the [DarkSky API](https://darksky.net/dev) with API calls. 
+This project uses 2011 soccer season data from this [kaggle page](https://www.kaggle.com/laudanum/footballdelphi). This required extracting, transforming, and loading (ETL) the given SQL database and combining the information with weather data from the [DarkSky API](https://darksky.net/dev) with API calls. 
 
 The goal was to display the number of wins, ties, and losses for each team and compare that information to each team's corresponding win percentage in the rain to see how much of an effect rain wins contributed to the overall season results.
 
