@@ -3,7 +3,7 @@ import numpy as np
 import sqlite3
 from Query_Executor import QueryExecutor as qe
 
-conn = sqlite3.connect('database.sqlite')
+conn = sqlite3.connect('../data/database.sqlite')
 c = conn.cursor()
 
 class team_stats():
@@ -14,7 +14,7 @@ class team_stats():
         pass
 
     def table_build(self):
-        df = pd.read_csv('matches_adding_rain_info.csv')
+        df = pd.read_csv('../data/matches_adding_rain_info.csv')
         
         for team in qe.team_names()['TeamName']:
             for match in df:
