@@ -30,6 +30,11 @@ The original sqlite file has a lot of information that can be used! It is possib
 
 The current implementation of weather only checks for a simple boolean of whether or not it rained on that game day in Berlin. However, not all of the games were played in Berlin and were played at different times. Future improvements can factor in the proper geography and meterology.
 
+UPDATE 2020/03/31:
+https://blog.darksky.net/dark-sky-has-a-new-home/
+
+DarkSky is discontinuing their API. This project will need to be refactored to use a different weather data source.
+
 
 ## Running the Code
 If you are looking to run and/or work on this project yourself, you will need to 
