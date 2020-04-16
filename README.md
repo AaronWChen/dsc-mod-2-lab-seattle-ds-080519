@@ -35,6 +35,13 @@ https://blog.darksky.net/dark-sky-has-a-new-home/
 
 DarkSky is discontinuing their API. This project will need to be refactored to use a different weather data source.
 
+### Alternate Sources for Weather Data
+This requires more investigation, but here are some potential APIs to use now that DarkSky is discontinued:
+
+1. OpenWeather (historical data is not free): https://openweathermap.org/price
+2. Look for historical weather reports issued in Germany. Government sources should have this as free. Since the entire database is based only in Germany, this should be ok, but must find source.
+
+
 
 ## Running the Code
 If you are looking to run and/or work on this project yourself, you will need to 
