@@ -45,11 +45,16 @@ This requires more investigation, but here are some potential APIs to use now th
 
 ## Running the Code
 If you are looking to run and/or work on this project yourself, you will need to 
-1. Create an account with DarkSky to obtain an API key with them
-2. Create a folder inside the repo root called secrets, and store the DarkSky API key in a dictionary inside a json file named "dark_sky_api.json". The key should be "key" and the value should be the API code.
-3. Install Python 3 (I prefer and recommend Anaconda)
+~~1. Create an account with DarkSky to obtain an API key with them~~
+~~2. Create a folder inside the repo root called secrets, and store the DarkSky API key in a dictionary inside a json file named "dark_sky_api.json". The key should be "key" and the value should be the API code.~~
+See above about DarkSky being discontinued
+
+~~3. Install Python 3 (I prefer and recommend Anaconda)~~
 4. Clone [this repo](https://github.com/AaronWChen/Kickin-in-the-Rain)
-5. Install the packages in the requirements.txt file via pip (pip install -r requirements.txt from command line)
+~~5. Install the packages in the requirements.txt file via pip (pip install -r requirements.txt from command line)~~
+Now that I look at this, using pip to install a conda environment wasn't the best way to do this anyway.
+
+I suggest using Poetry now for Python library management. I'll refactor this environment/repo to that architecture.
 
 If you want to see the high level execution and results of the code, you can navigate to the python/ directory of this repo, open a Jupyter server there, and explore the notebooks (particularly plotter.ipynb).
 
